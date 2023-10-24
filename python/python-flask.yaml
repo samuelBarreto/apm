@@ -11,10 +11,12 @@ spec:
       labels:
         app: python-flask
     spec:
+      imagePullSecrets:
+        - name: gcr-json-key
       containers:
       - name: python-flask
-        image: python-flask
-        imagePullPolicy: Never
+        image: us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/python-flask:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env: []

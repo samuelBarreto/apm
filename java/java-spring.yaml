@@ -9,15 +9,24 @@ spec:
   template:
     metadata:
       labels:
+        admission.datadoghq.com/enabled: "true"
         app: java-spring
     spec:
+      imagePullSecrets:
+        - name: gcr-json-key
       containers:
       - name: java-spring
-        image: 1234samue/datadog-java-spring:latest
-        imagePullPolicy: Never
+        image:  us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/java-spring:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
-        env: []
+        env: 
+            - name: DD_SERVICE
+              value: java-spring
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
         resources:
           requests:
             cpu: 200m

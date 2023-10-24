@@ -1,7 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dotnet-todoapi
+  name: dotnet-todoapi 
+  labels:
+    tags.datadoghq.com/env: dev
+    tags.datadoghq.com/service: dotnet-todoapi
+    tags.datadoghq.com/version: "1.0.0"
 spec:
   selector:
     matchLabels:
@@ -10,14 +14,35 @@ spec:
     metadata:
       labels:
         app: dotnet-todoapi
+        tags.datadoghq.com/env: dev
+        tags.datadoghq.com/service: dotnet-todoapi
+        tags.datadoghq.com/version: "1.0.0"
     spec:
+      imagePullSecrets:
+        - name: gcr-json-key
       containers:
       - name: dotnet-todoapi
-        image: dotnet-todoapi
-        imagePullPolicy: Never
+        image: us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/dotnet-todoapi:1.0.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
-        env: []
+        env: 
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
         resources:
           requests:
             cpu: 200m
