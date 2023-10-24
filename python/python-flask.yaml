@@ -15,7 +15,7 @@ spec:
       labels:
           tags.datadoghq.com/env: dev
           tags.datadoghq.com/service: python-flask
-          tags.datadoghq.com/version: "1.0.1"
+          tags.datadoghq.com/version: "1.0.2"
           app: python-flask
       annotations:
         ad.datadoghq.com/python-flask.logs: '[{"source": "python","service": "python-flask","tags": ["env:dev"]}]'
@@ -24,7 +24,7 @@ spec:
         - name: gcr-json-key
       containers:
       - name: python-flask
-        image: us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/python-flask:1.0.1
+        image: us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/python-flask:1.0.2
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -71,3 +71,4 @@ spec:
   - name: http
     port: 8082
     targetPort: 5000
+
