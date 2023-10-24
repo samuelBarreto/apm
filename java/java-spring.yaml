@@ -18,7 +18,7 @@ spec:
         tags.datadoghq.com/version: "1.0.2"
         app: java-spring
       annotations:
-        ad.datadoghq.com/python-flask.logs: '[{"source": " java-spring","service": "java","tags": ["env:dev"]}]'
+        ad.datadoghq.com/java-spring.logs: '[{"source": "java","service": "java-spring","tags": ["env:dev"]}]'
     spec:
       imagePullSecrets:
         - name: gcr-json-key
