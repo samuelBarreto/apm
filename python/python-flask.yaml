@@ -1,6 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    tags.datadoghq.com/env: dev
+    tags.datadoghq.com/service: python-flask
+    tags.datadoghq.com/version: "1.0.1"
   name: python-flask
 spec:
   selector:
@@ -9,17 +13,44 @@ spec:
   template:
     metadata:
       labels:
-        app: python-flask
+          tags.datadoghq.com/env: dev
+          tags.datadoghq.com/service: python-flask
+          tags.datadoghq.com/version: "1.0.1"
+          app: python-flask
+      annotations:
+        ad.datadoghq.com/python-flask.logs: '[{"source": "python","service": "python-flask","tags": ["env:dev"]}]'
     spec:
       imagePullSecrets:
         - name: gcr-json-key
       containers:
       - name: python-flask
-        image: us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/python-flask:latest
+        image: us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/python-flask:1.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
-        env: []
+        env: 
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_TRACE_SAMPLE_RATE
+              value: "1"
         resources:
           requests:
             cpu: 200m

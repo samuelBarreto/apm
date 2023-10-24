@@ -17,6 +17,8 @@ spec:
         tags.datadoghq.com/env: dev
         tags.datadoghq.com/service: dotnet-todoapi
         tags.datadoghq.com/version: "1.0.0"
+      annotations:
+        ad.datadoghq.com/dotnet-todoapi.logs: '[{"source": "csharp","service": "dotnet-todoapi","tags": ["env:dev"]}]'
     spec:
       imagePullSecrets:
         - name: gcr-json-key
@@ -43,6 +45,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_TRACE_SAMPLE_RATE
+              value: "1"
         resources:
           requests:
             cpu: 200m

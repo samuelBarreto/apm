@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: java-spring
+  labels:
+    tags.datadoghq.com/env: dev
+    tags.datadoghq.com/service: java-spring
+    tags.datadoghq.com/version: "1.0.2"
 spec:
   selector:
     matchLabels:
@@ -9,24 +13,44 @@ spec:
   template:
     metadata:
       labels:
-        admission.datadoghq.com/enabled: "true"
+        tags.datadoghq.com/env: dev
+        tags.datadoghq.com/service: java-spring
+        tags.datadoghq.com/version: "1.0.2"
         app: java-spring
+      annotations:
+        ad.datadoghq.com/python-flask.logs: '[{"source": " java-spring","service": "java","tags": ["env:dev"]}]'
     spec:
       imagePullSecrets:
         - name: gcr-json-key
       containers:
       - name: java-spring
-        image:  us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/java-spring:latest
+        image:  us-east1-docker.pkg.dev/datadog-402618/datadog-appoena/java-spring:1.0.2
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env: 
-            - name: DD_SERVICE
-              value: java-spring
             - name: DD_AGENT_HOST
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_TRACE_SAMPLE_RATE
+              value: "1"
         resources:
           requests:
             cpu: 200m

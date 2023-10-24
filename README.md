@@ -52,3 +52,10 @@ apm
 
 
 kubectl logs -f datadog-agent-69fpm -c trace-agent -n datadog-agent
+
+Examples - Datadog Redis integration
+
+annotations:
+    ad.datadoghq.com/dotnet-todoapi.logs: '[{"source": "csharp","service": "dotnet-todoapi","tags": ["env:dev"]}]'
+
+config trace no log - source com a linguagem de programacao - e pipeline para config 
