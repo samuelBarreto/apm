@@ -1,8 +1,8 @@
 targetSystem: "linux"
 
 datadog:
-  apiKey: e5bcd35313bf432686c28c9cfbd2f0d9
-  appKey: d561f0e8d863b23a0f9ac38129e8e95efc90da89
+  apiKey: 
+  appKey: 
   clusterName: gke
   logLevel: INFO
 
